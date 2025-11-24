@@ -2,7 +2,7 @@ name: Mirror KDE Glaxnimate Repo
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # every hour
+    - cron: '0 0 * * 0' # weekly
   workflow_dispatch:
 
 jobs:
@@ -16,10 +16,12 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-      
+
       - name: Mirror from KDE
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git clone --mirror https://invent.kde.org/graphics/glaxnimate.git source
           cd source
-          git remote set-url --push origin https://github.com/User-DK/glaxnimate.git
+          git remote set-url --push origin https://$TOKEN@github.com/User-DK/glaxnimate.git
           git push --mirror
