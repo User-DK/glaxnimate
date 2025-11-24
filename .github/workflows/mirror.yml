@@ -1,0 +1,25 @@
+name: Mirror KDE Glaxnimate Repo
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # every hour
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout GitHub repo
+        uses: actions/checkout@v3
+        
+      - name: Set up mirror
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+      
+      - name: Mirror from KDE
+        run: |
+          git clone --mirror https://invent.kde.org/graphics/glaxnimate.git source
+          cd source
+          git remote set-url --push origin https://github.com/User-DK/glaxnimate.git
+          git push --mirror
